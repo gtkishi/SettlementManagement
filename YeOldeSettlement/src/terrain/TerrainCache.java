@@ -88,6 +88,8 @@ public class TerrainCache {
 	
 	public void clearCache(){
 		File dir = new File("cache");
+		if (!dir.exists())
+			dir.mkdir();
 		for (File f : dir.listFiles())
 			if (!f.getName().matches("^" + seed + ".*")) {
 				System.out.println("Deleting " + f.getName());

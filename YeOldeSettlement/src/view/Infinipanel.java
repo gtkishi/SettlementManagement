@@ -116,15 +116,16 @@ public class Infinipanel extends JPanel{
 	}
 	
 	public void update(){
+		int d = 2;
 		for (char c : pressed){
 			switch(c){
-				case 'w':	move(0, -5);
+				case 'w':	move(0, -d);
 							break;
-				case 'a':	move(-5, 0);
+				case 'a':	move(-d, 0);
 							break;
-				case 's':	move(0, 5);
+				case 's':	move(0, d);
 							break;
-				case 'd':	move(5, 0);
+				case 'd':	move(d, 0);
 							break;
 			}
 		}
@@ -154,7 +155,7 @@ public class Infinipanel extends JPanel{
 		frame.add(panel);
 		frame.setVisible(true);
 		
-		new Timer(30, (e -> panel.update())).start();
+		new Timer(10, (e -> panel.update())).start();
 		frame.addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent arg0) {
 				panel.pressed.add(arg0.getKeyChar());
