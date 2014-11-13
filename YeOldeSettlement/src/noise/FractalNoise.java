@@ -1,8 +1,19 @@
 package noise;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Random;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import terrain.Terrain;
 
 public class FractalNoise {
 	public interface ChunkLoadedListener {
@@ -130,16 +141,30 @@ public class FractalNoise {
 	}
 	
 	/**
-	 * Loads a chunk of noise asynchronously
+	 * Generates a 2D array of 2 element fractal noise starting at the given point
+	 * 
 	 * @param dx	starting x location
 	 * @param dy	starting y location
 	 * @param size	width and height of array
-	 * @param persistence	indicates how much weight each subsequent layer has on the final noise value
+	 * @param persis1	indicates how much weight each subsequent layer has on the first noise value
+	 * * @param persis1	indicates how much weight each subsequent layer has on the second noise value
 	 * @param octaves	number of layers to generate
 	 * @param seed	seed to use for random generation
-	 * @param listener	callback listener
+	 * @return	a 2D array of noise
 	 */
-	public static void loadChunk(int dx, int dy, int size, float persistence, int octaves, long seed, ChunkLoadedListener listener) {
-		new Thread(new ChunkLoader(dx, dy, size, persistence, octaves, seed, listener)).start();
+	public static Point2D[][] fracPointNoise2D(int dx, int dy, int size, float persis1, float persis2, int octaves, long seed){
+		HashMap<Point, Float> cache = new HashMap<Point, Float>();
+		HashMap<Point, Float> cache2 = new HashMap<Point, Float>();
+		
+		long seed2 = new Random(seed).nextLong();
+		
+		Point2D[][] values = new Point2D.Float[size][size];
+		for (int x = 0; x < size; x++)
+			for (int y = 0; y < size; y++) {
+				float first = fractalNoise2(x + dx, y + dy, persis1, octaves, seed, cache);
+				float second = fractalNoise2(x + dx, y + dy, persis2, octaves, seed2, cache2);
+				values[x][y] = new Point2D.Float(first, second);
+			}
+		return values;
 	}
 }

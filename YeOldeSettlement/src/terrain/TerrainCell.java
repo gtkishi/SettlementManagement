@@ -1,13 +1,11 @@
 package terrain;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TerrainCell {
-	public static final int TILE_SIZE = 16;
-	public static final int ISO_SIZE = 32;
-	
+public class TerrainCell implements Serializable{
 	public Point chunkPos;
 	public TerrainCell north, south, east, west;
 
