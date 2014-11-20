@@ -21,7 +21,7 @@ public class InfiniScroller extends JFrame {
 	private TerrainCache cache;
 	private JPanel drawPanel;
 	private boolean showGrid;
-	//private int width, height;
+	
 	private TreeSet<Character> moveSet;
 	
 	private class InfiniPanel extends JPanel {

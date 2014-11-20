@@ -21,7 +21,7 @@ import noise.FractalNoise;
 
 
 public class TerrainChunk implements Serializable{
-	public static final int CHUNK_SIZE = 64;
+	public static final int CHUNK_SIZE = 96;
 	
 	private TerrainCell[][] map;
 	private Point chunkPos;
@@ -32,6 +32,12 @@ public class TerrainChunk implements Serializable{
 		map = new TerrainCell[CHUNK_SIZE][CHUNK_SIZE];
 		chunkPos = pos;
 		setNoise(noise);
+	}
+	
+	public TerrainChunk(Point pos, float[][] noise, float[][] data){
+		map = new TerrainCell[CHUNK_SIZE][CHUNK_SIZE];
+		chunkPos = pos;
+		setNoise2(noise, data);
 	}
 	
 	public BufferedImage getBackground(){
@@ -45,7 +51,7 @@ public class TerrainChunk implements Serializable{
 	}
 
 	public static Dimension getMapDimension(){
-		return new Dimension(Terrain.ISO_SIZE * CHUNK_SIZE, (Terrain.ISO_SIZE * (CHUNK_SIZE + 1))/2);
+		return new Dimension(Terrain.ISO_SIZE * CHUNK_SIZE, (Terrain.HALF_ISO * (CHUNK_SIZE + 1)));
 	}
 	
 	public Point getPos(){return chunkPos;}
@@ -65,6 +71,29 @@ public class TerrainChunk implements Serializable{
 										height < 608 ? Terrain.TREE : 
 											height < 628 ? Terrain.ROCK : 
 												Terrain.SNOW));
+		}
+		redraw();
+	}
+	
+	public void setNoise2(float[][] noise, float[][] data){
+		int dx = chunkPos.x * CHUNK_SIZE;
+		int dy = chunkPos.y * CHUNK_SIZE;
+		for (int x = 0; x < CHUNK_SIZE; x++){
+			for (int y = 0; y < CHUNK_SIZE; y++)
+			{
+				int height = (int)(1024 * noise[x][y]);
+				int value = (int)(256 * data[x][y]);
+				map[x][y] = new TerrainCell(new Point(dx + x, dy + y), 
+						(height < 500 ? Terrain.DEEP: 
+							height < 524 ? Terrain.SHALLOW :
+								height < 532 ? Terrain.SHORE :
+									height < 540 ? Terrain.GRASS :
+										height < 608 && value < 128 ? Terrain.GRASS :
+											height < 608 ? Terrain.TREE : 
+												height < 768 ? Terrain.ROCK : 
+													Terrain.SNOW));
+			}
+			Thread.yield();
 		}
 		redraw();
 	}
@@ -103,8 +132,7 @@ public class TerrainChunk implements Serializable{
 				py.addPoint(p.x, p.y + 3*dy);
 				
 				for (int y = 0; y < CHUNK_SIZE; y++){
-
-					tile = Terrain.terrainImages.get(map[x][y].terrain.str);
+					tile = Terrain.terrainImages.get(map[x][y].filename);
 					g2d.drawImage(tile, p.x, p.y, null);
 					if (map[x][y].terrain == Terrain.GRASS || 
 							map[x][y].terrain == Terrain.SHALLOW || 

@@ -165,5 +165,6 @@ public class Infinipanel extends JPanel{
 				panel.pressed.remove(arg0.getKeyChar());
 			}
 		});
+		Thread.currentThread().setPriority(Thread.NORM_PRIORITY + 1);
 	}
 }

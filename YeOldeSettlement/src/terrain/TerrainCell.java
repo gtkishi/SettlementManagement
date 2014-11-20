@@ -10,16 +10,19 @@ public class TerrainCell implements Serializable{
 	public TerrainCell north, south, east, west;
 
 	public Terrain terrain;
+	public String filename;
 	
 	public TerrainCell(Point pos){
 		chunkPos = pos;
 		terrain = Terrain.GRASS;
+		filename = terrain.getFilename();
 	}
 	
 	public TerrainCell(Point pos, Terrain type)
 	{
 		chunkPos = pos;
 		terrain = type;
+		filename = terrain.getFilename();
 	}
 	
 	public char getChar(){

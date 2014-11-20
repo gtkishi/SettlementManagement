@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.util.Random;
 
 import noise.FractalNoise;
 import noise.FractalNoise.ChunkLoadedListener;
@@ -41,8 +42,11 @@ public class ChunkLoader implements Runnable{
 			}
 		}
 			
-		if (chunk == null)
-			callback.chunkLoaded(FractalNoise.fracNoise2D(dx, dy, TerrainChunk.CHUNK_SIZE, persistence, octaves, seed));
+		if (chunk == null) {
+			long other = new Random(seed).nextLong();
+			callback.chunkLoaded(FractalNoise.fracNoise2D(dx, dy, TerrainChunk.CHUNK_SIZE, persistence, octaves, seed),
+					FractalNoise.fracNoise2D(dx, dy, TerrainChunk.CHUNK_SIZE, 1.2f, 6, other));
+		}
 		else
 			cache.put(pos, chunk);
 	}

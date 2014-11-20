@@ -39,6 +39,10 @@ public class TerrainCache {
 		public void chunkLoaded(float[][] chunk) {
 			put(loc, new TerrainChunk(loc, chunk));
 		}
+		
+		public void chunkLoaded(float[][] noise, float[][] data){
+			put(loc, new TerrainChunk(loc, noise, data));
+		}
 	}
 	
 	private class Archiver implements Runnable {
